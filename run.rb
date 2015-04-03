@@ -40,11 +40,15 @@ loop do
     end
 
     action.choice('Save animal list to file') do
-      File.open('list.json', 'w') { |file| file.write(Serializer.serialize_array(@animal_list)) }
+      File.open('list.json', 'w') do |file|
+        file.write(Serializer.serialize_array(@animal_list))
+      end
     end
 
     action.choice('Load animal list from file') do
-
+      json = File.open('list.json', 'r').read
+      @animal_list = Serializer.deserialize_array(json)
+      print_animal_list
     end
 
     action.choices('Exit') { exit }
