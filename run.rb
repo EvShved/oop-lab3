@@ -1,6 +1,9 @@
+require 'active_support'
+require 'active_support/core_ext'
 require 'json'
 require 'colorize'
 require 'highline/import'
+require_relative 'lib/serializer'
 require_relative 'lib/animal'
 require_relative 'lib/herbivorous'
 require_relative 'lib/predator'
@@ -15,27 +18,35 @@ def print_animal_list
   puts "Animal list: #{@animal_list.join(', ')}\n".green
 end
 
-loop do
-  choose do |action|
-    action.prompt = 'Please choose an action'.red
+a = Cat.new
+a.name = 'cat'
+b = Cow.new
+b.name = 'cow'
+p s = Serializer.serialize(b)
+p Serializer.deserialize(s).name
+p 'Cat'.constantize
 
-    action.choice('Add an Animal') do
-      choose do |animal|
-        animal.prompt = 'Choose an animal'.yellow
+# loop do
+#   choose do |action|
+#     action.prompt = 'Please choose an action'.red
 
-        [Cat, Wolf, Horse, Cow].each do |animal_class|
-          animal.choice(animal_class.to_s) do
-            @animal_list << animal_class.new
+#     action.choice('Add an Animal') do
+#       choose do |animal|
+#         animal.prompt = 'Choose an animal'.yellow
 
-            @animal_list.last.name = ask('Enter name') do |q|
-              q.validate = /[A-z]*/
-            end
-          end
-        end
-        print_animal_list
-      end
-    end
+#         [Cat, Wolf, Horse, Cow].each do |animal_class|
+#           animal.choice(animal_class.to_s) do
+#             @animal_list << animal_class.new
 
-    action.choices('Exit') { exit }
-  end
-end
+#             @animal_list.last.name = ask('Enter name') do |q|
+#               q.validate = /[A-z]*/
+#             end
+#           end
+#         end
+#         print_animal_list
+#       end
+#     end
+
+#     action.choices('Exit') { exit }
+#   end
+# end

@@ -1,6 +1,3 @@
-require 'active_support'
-require 'active_support/core_ext'
-
 class Animal
   attr_accessor :name
 
