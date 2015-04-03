@@ -18,35 +18,35 @@ def print_animal_list
   puts "Animal list: #{@animal_list.join(', ')}\n".green
 end
 
-a = Cat.new
-a.name = 'cat'
-b = Cow.new
-b.name = 'cow'
-p s = Serializer.serialize(b)
-p Serializer.deserialize(s).name
-p 'Cat'.constantize
+loop do
+  choose do |action|
+    action.prompt = 'Please choose an action'.red
 
-# loop do
-#   choose do |action|
-#     action.prompt = 'Please choose an action'.red
+    action.choice('Add an Animal') do
+      choose do |animal|
+        animal.prompt = 'Choose an animal'.yellow
 
-#     action.choice('Add an Animal') do
-#       choose do |animal|
-#         animal.prompt = 'Choose an animal'.yellow
+        [Cat, Wolf, Horse, Cow].each do |animal_class|
+          animal.choice(animal_class.to_s) do
+            @animal_list << animal_class.new
 
-#         [Cat, Wolf, Horse, Cow].each do |animal_class|
-#           animal.choice(animal_class.to_s) do
-#             @animal_list << animal_class.new
+            @animal_list.last.name = ask('Enter name') do |q|
+              q.validate = /[A-z]*/
+            end
+          end
+        end
+        print_animal_list
+      end
+    end
 
-#             @animal_list.last.name = ask('Enter name') do |q|
-#               q.validate = /[A-z]*/
-#             end
-#           end
-#         end
-#         print_animal_list
-#       end
-#     end
+    action.choice('Save animal list to file') do
+      File.open('list.json', 'w') { |file| file.write(Serializer.serialize_array(@animal_list)) }
+    end
 
-#     action.choices('Exit') { exit }
-#   end
-# end
+    action.choice('Load animal list from file') do
+
+    end
+
+    action.choices('Exit') { exit }
+  end
+end

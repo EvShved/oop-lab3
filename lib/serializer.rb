@@ -1,5 +1,15 @@
 class Serializer
-  def self.serialize(object)
+  def self.serialize_array(array)
+    array.map { |item| object_to_hash(item) }.to_json
+  end
+
+  def self.deserialize_array(json)
+    JSON.load(json).map { |item| hash_to_object(item) }
+  end
+
+  private
+
+  def self.object_to_hash(object)
     variable_names = object.instance_variables
     variables = {}
 
@@ -10,11 +20,10 @@ class Serializer
     {
       class: object.class.name,
       instance_variables: variables
-    }.to_json
+    }
   end
 
-  def self.deserialize(json)
-    hash = JSON.load(json)
+  def self.hash_to_object(hash)
     object = hash['class'].constantize.new
 
     hash['instance_variables'].each do |name, value|
