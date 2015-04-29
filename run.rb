@@ -3,14 +3,7 @@ require 'active_support/core_ext'
 require 'json'
 require 'colorize'
 require 'highline/import'
-require_relative 'lib/serializer'
-require_relative 'lib/animal'
-require_relative 'lib/herbivorous'
-require_relative 'lib/predator'
-require_relative 'lib/wolf'
-require_relative 'lib/cat'
-require_relative 'lib/cow'
-require_relative 'lib/horse'
+Dir['../lib/*.rb'].each {|element| require_relative(element)}
 
 @animal_list = []
 
